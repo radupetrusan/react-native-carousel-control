@@ -224,7 +224,12 @@ export default class Carousel extends Component {
             onPress={() => this.setState({ currentPage: index })}
           >
             <View
-              style={[styles.page, computedStyles.page, this.props.pageStyle]}
+              style={[
+                styles.page,
+                computedStyles.page,
+                this.props.pageStyle,
+                { opacity: this.state.currentPage === index ? 1 : 0.1 }
+              ]}
             >
               {c}
             </View>
