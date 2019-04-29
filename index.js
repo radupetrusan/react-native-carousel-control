@@ -246,7 +246,7 @@ export default class Carousel extends Component {
         <ScrollView
           automaticallyAdjustContentInsets={false}
           bounces
-          scrollEnabled={false}
+          scrollEnabled
           contentContainerStyle={[computedStyles.scrollView]}
           style={{
             flexDirection:
