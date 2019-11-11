@@ -151,31 +151,17 @@ export default class Carousel extends Component {
 
         */
     const gap = (width - 2 * sneak - pageWidth) / 2;
-    this.setState({ gap: gap });
+    const interval = width - gap - 2 * sneak;
+    this.setState({ gap, interval });
   }
 
   _handleScrollEnd(e) {
-    const { swipeThreshold } = this.props;
-    const { currentPage } = this.state;
+    const { interval } = this.state;
 
-    const currentPageScrollX = this._getPageScrollX(currentPage);
     const currentScrollX = e.nativeEvent.contentOffset.x;
 
-    const swiped =
-      (currentScrollX - currentPageScrollX) / this._getPageOffset();
-
-    const pagesSwiped =
-      Math.floor(Math.abs(swiped) + (1 - swipeThreshold)) * Math.sign(swiped);
-    const newPage = Math.max(
-      Math.min(currentPage + pagesSwiped, this._getPagesCount() - 1),
-      0
-    );
-
-    if (newPage !== currentPage) {
-      this.setState({ currentPage: newPage });
-    } else {
-      this._resetScrollPosition();
-    }
+    const currentPageIndex = currentScrollX / interval;
+    this.setState({currentPage: currentPageIndex});
   }
 
   _onPageChange(position) {
@@ -187,7 +173,7 @@ export default class Carousel extends Component {
 
   render() {
     const { sneak, pageWidth } = this.props;
-    const { gap } = this.state;
+    const { gap, interval } = this.state;
     const computedStyles = StyleSheet.create({
       scrollView: {
         paddingLeft: sneak + gap / 2,
@@ -197,7 +183,7 @@ export default class Carousel extends Component {
         width: pageWidth,
         justifyContent: "center",
         marginLeft: gap / 2,
-        marginRight: gap / 2
+        marginRight: gap / 2,
       }
     });
 
@@ -229,7 +215,7 @@ export default class Carousel extends Component {
                 computedStyles.page,
                 this.props.pageStyle,
                 {
-                  opacity: this.state.currentPage === index ? 1 : 0.1,
+                  // opacity: this.state.currentPage === index ? 1 : 0.1,
                   top: this.state.currentPage === index ? 0 : 20
                 }
               ]}
@@ -246,7 +232,7 @@ export default class Carousel extends Component {
         <ScrollView
           automaticallyAdjustContentInsets={false}
           bounces
-          scrollEnabled={false}
+          scrollEnabled
           contentContainerStyle={[computedStyles.scrollView]}
           style={{
             flexDirection:
@@ -254,7 +240,8 @@ export default class Carousel extends Component {
           }}
           decelerationRate={0.9}
           horizontal
-          onScrollEndDrag={this._handleScrollEnd}
+          onMomentumScrollEnd={this._handleScrollEnd}
+          snapToInterval={interval}
           ref={c => (this.scrollView = c)}
           showsHorizontalScrollIndicator={false}
         >
