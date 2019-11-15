@@ -216,7 +216,7 @@ export default class Carousel extends Component {
                 this.props.pageStyle,
                 {
                   // opacity: this.state.currentPage === index ? 1 : 0.1,
-                  top: this.state.currentPage === index ? 0 : 20
+                  // top: this.state.currentPage === index ? 0 : 20
                 }
               ]}
             >
